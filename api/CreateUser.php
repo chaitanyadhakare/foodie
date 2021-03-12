@@ -27,6 +27,7 @@
                         $obj->statusMessage = "success";
                         $obj->userId = mysqli_insert_id($conn);
                         $obj->userName = $user_username;
+                        $obj->name = $user_name;
                     }
                     else {
                         $obj->statusCode = 300;
