@@ -23,16 +23,23 @@
                 $obj->isRegistered = true; 
                 $obj->userId = $row["user_id"];
                 $obj->userName = $row["user_username"];
+                $obj->name = $row["user_name"];
                 if($row["f_diet_id"] != 1)
                     $obj->isPreferenceSet = true;
                 else
                     $obj->isPreferenceSet = false;
+                
+                if($row["isRatedDishes"]!=0)
+                    $obj->isRatedDishes = true;
+                else
+                    $obj->isRatedDishes = false;
             }
             else {
                 $obj->statusCode = 200;
                 $obj->statusMessage = "success";
                 $obj->isRegistered = false;
                 $obj->isPreferenceSet = false;
+                $obj->isRatedDishes = false;
             }
         }
         else {

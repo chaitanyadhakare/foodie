@@ -12,23 +12,17 @@
             $params = json_decode(file_get_contents("php://input"), true);
             if($params != null)
                 $_POST = $params;
-            $user_mob_no = mysqli_real_escape_string($conn, $_POST["user_mob_no"]);
-            $user_username = mysqli_real_escape_string($conn, $_POST["user_username"]);
-            $user_name = mysqli_real_escape_string($conn, $_POST["user_name"]);         
+            $user_id = mysqli_real_escape_string($conn, $_POST["user_id"]);
+           // $f_diet_id = mysqli_real_escape_string($conn, $_POST["f_diet_id"]);        
             try {
-                $sql = "INSERT INTO users(
-                    user_mob_no, user_username, user_name
-                )
-                VALUES(?,?,?)";
+                $sql = "UPDATE users 
+                        SET f_diet_id = 1
+                        WHERE user_id = ?";
                 if($stmt = mysqli_prepare($conn,$sql)) {
-                    mysqli_stmt_bind_param($stmt, "iss", $user_mob_no, $user_username, $user_name);
+                    mysqli_stmt_bind_param($stmt, "i", $user_id);
                     if(mysqli_stmt_execute($stmt)) {
                         $obj->statusCode = 200;
                         $obj->statusMessage = "success";
-                        $obj->userId = mysqli_insert_id($conn);
-                        $obj->userName = $user_username;
-                        $obj->name = $user_name;
-                        $obj->isRatedDishes = false;
                     }
                     else {
                         $obj->statusCode = 300;
@@ -51,5 +45,4 @@
         $obj->statusMessage = "Invalid request type";
     }
     echo json_encode($obj);
-
 ?>
