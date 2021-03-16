@@ -1,6 +1,6 @@
 <?php
     $states_arr = array(); 
-    
+    array_push($states_arr , "Any");
     $obj = new stdClass();
     if($_SERVER['REQUEST_METHOD'] === 'POST') {
         require_once('../db/conn.php');
@@ -14,11 +14,7 @@
             $res = mysqli_stmt_get_result($stmt);
             if(mysqli_num_rows($res) != 0) {
                 while($row = mysqli_fetch_assoc($res)){
-                    $state_item = array(
-                        "stateId" => $row["state_id"],
-                        "stateName" => $row["state_name"]
-                    );
-                    array_push($states_arr , $state_item);
+                    array_push($states_arr , $row["state_name"]);
                 }
                 $obj->statusCode = 200;
                 $obj->statusMessage = "success";
