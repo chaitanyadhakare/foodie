@@ -13,10 +13,10 @@
             if($params != null)
                 $_POST = $params;
             $user_id = mysqli_real_escape_string($conn, $_POST["user_id"]);
-           // $f_diet_id = mysqli_real_escape_string($conn, $_POST["f_diet_id"]);        
+            $f_diet_id = mysqli_real_escape_string($conn, $_POST["f_diet_id"]);        
             try {
                 $sql = "UPDATE users 
-                        SET f_diet_id = 1
+                        SET f_diet_id = ". $f_diet_id ."
                         WHERE user_id = ?";
                 if($stmt = mysqli_prepare($conn,$sql)) {
                     mysqli_stmt_bind_param($stmt, "i", $user_id);

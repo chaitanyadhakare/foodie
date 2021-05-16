@@ -1,28 +1,17 @@
 <?php
-    $dish_arr = array(); 
-    function getDishName($dish_id, $conn){
-        $dish_name;
-        $sql = "SELECT dish_name FROM dishes WHERE dish_id = ".$dish_id;
+    function getStateName($conn, $state_id){
+        $state_name;
+        $sql = "SELECT state_name FROM states WHERE state_id = ".$state_id;
         $stmt = mysqli_prepare($conn, $sql);
         mysqli_stmt_execute($stmt);
         $res = mysqli_stmt_get_result($stmt);
         if(mysqli_num_rows($res) != 0) {
             $row = mysqli_fetch_assoc($res);
-            $dish_name = $row["dish_name"];       
+            $state_name = $row["state_name"];       
         }
-        return $dish_name;
+        return $state_name;
     }
 
-    function getAllDishes($dish_id, $rating, $time,$conn){
-        global $dish_arr;
-        $timestamp = strtotime($time);
-        $dish_item = array(
-            "dish_name" => getDishName($dish_id, $conn),
-            "rating" => $rating,
-            "date" => date("d/m/Y",$timestamp)
-        );
-        array_push($dish_arr, $dish_item);
-    }
 
     $obj = new stdClass();
     if($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -34,20 +23,17 @@
             $params = json_decode(file_get_contents("php://input"), true);
             if($params != null)
                 $_POST = $params;
-                
-            $user_id= mysqli_real_escape_string($conn, $_POST["user_id"]);
-            $sql = "SELECT * FROM user_dish_history WHERE f_user_id = ". $user_id;
+            $user_id = mysqli_real_escape_string($conn, $_POST["user_id"]);
+            $sql = "SELECT * from users where user_id = ?";
             $stmt = mysqli_prepare($conn, $sql);
+            mysqli_stmt_bind_param($stmt, 'i', $user_id);
             mysqli_stmt_execute($stmt);
             $res = mysqli_stmt_get_result($stmt);
             if(mysqli_num_rows($res) != 0) {
-                while($row = mysqli_fetch_assoc($res)){
-                    getAllDishes($row["f_dish_id"],$row["rating"],$row["timestamp"], $conn);
-                }
+                $row = mysqli_fetch_assoc($res);
                 $obj->statusCode = 200;
                 $obj->statusMessage = "success";
-               // $obj->userId = $user_id;
-                $obj->dishes = $dish_arr;
+                $obj->state = getStateName($conn, $row["f_state_id"]);
             }
             else {
                 $obj->statusCode = 200;

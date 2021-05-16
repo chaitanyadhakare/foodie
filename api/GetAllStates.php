@@ -1,6 +1,6 @@
 <?php
     $states_arr = array(); 
-    array_push($states_arr , "Any");
+ //   array_push($states_arr , "Any");
     $obj = new stdClass();
     if($_SERVER['REQUEST_METHOD'] === 'POST') {
         require_once('../db/conn.php');
